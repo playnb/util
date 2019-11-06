@@ -1,4 +1,4 @@
-package util
+package pool
 
 import (
 	"github.com/smartystreets/goconvey/convey"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestDefaultPool(t *testing.T) {
-	pool := DefaultPool().Get(1024)
+	pool := pool2.DefaultPool().Get(1024)
 	t.Log(pool)
 
 	convey.Convey("将两数相加", t, func() {

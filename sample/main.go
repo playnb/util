@@ -1,6 +1,9 @@
 package main
 
-import "github.com/playnb/util/log"
+import (
+	_ "github.com/playnb/util/config"
+	"github.com/playnb/util/log"
+)
 
 func main() {
 	log.InitPanic("../tmp")
@@ -8,4 +11,5 @@ func main() {
 	defer log.Flush()
 
 	log.Trace("--")
+
 }
