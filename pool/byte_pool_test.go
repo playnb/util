@@ -6,10 +6,10 @@ import (
 )
 
 func TestDefaultPool(t *testing.T) {
-	pool := pool2.DefaultPool().Get(1024)
+	pool := DefaultPool().Get(1024)
 	t.Log(pool)
 
-	convey.Convey("将两数相加", t, func() {
+	convey.Convey("测试BytePool", t, func() {
 		convey.So(1, convey.ShouldEqual, 1)
 	})
 }
