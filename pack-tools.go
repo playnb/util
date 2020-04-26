@@ -2,11 +2,30 @@ package util
 
 import "encoding/binary"
 
+func StringFromC(d []byte) string {
+	i := 0
+	for ; i < len(d); i++ {
+		if d[i] == 0 {
+			break
+		}
+	}
+	if i == 0 {
+		return ""
+	} else {
+		return string(d[0:i])
+	}
+}
+
 func NewPackTool(bigEndian bool) *PackTool {
 	p := &PackTool{
 		IsBigEndian: bigEndian,
 	}
 	return p
+}
+
+type CanPack interface {
+	Pack([]byte) int
+	Unpack([]byte) int
 }
 
 type PackTool struct {
@@ -41,6 +60,10 @@ func (p *PackTool) UnpackUint64(val *uint64, data []byte) int {
 	}
 	return 8
 }
+func (p *PackTool) UnpackBool(val *bool, data []byte) int {
+	*val = data[0] != 0
+	return 1
+}
 func (p *PackTool) UnpackString(val *string, data []byte, size int) int {
 	l := 0
 	for ; l < size; l++ {
@@ -52,8 +75,15 @@ func (p *PackTool) UnpackString(val *string, data []byte, size int) int {
 	return size
 }
 func (p *PackTool) UnpackSlice(val *[]byte, data []byte, size int) int {
+	if *val == nil {
+		*val = make([]byte, size)
+	}
 	copy(*val, data[:size])
 	return size
+}
+func (p *PackTool) UnpackArray(val []byte, data []byte) int {
+	copy(val, data)
+	return len(val)
 }
 
 func (p *PackTool) PackByte(data []byte, val byte) int {
@@ -84,14 +114,98 @@ func (p *PackTool) PackUint64(data []byte, val uint64) int {
 	}
 	return 8
 }
+func (p *PackTool) PackBool(data []byte, val bool) int {
+	if val {
+		data[0] = 1
+	} else {
+		data[0] = 0
+	}
+	return 1
+}
 func (p *PackTool) PackString(data []byte, val string, size int) int {
 	copy(data[0:size], []byte(val))
 	return size
 }
 func (p *PackTool) PackSlice(data []byte, val []byte, size int) int {
-	if len(val) > size {
-		val = val[0:size]
+	if val != nil && size > 0 {
+		if len(val) > size {
+			val = val[0:size]
+		}
+		copy(data, val)
 	}
-	copy(data, val)
 	return size
+}
+func (p *PackTool) PackArray(data []byte, val []byte) int {
+	copy(data, val)
+	return len(val)
+}
+
+var DefaultPack = NewPackTool(false)
+
+//----------------------
+type BYTE byte
+
+func (val *BYTE) Pack(data []byte) int {
+	return DefaultPack.PackByte(data, byte(*val))
+}
+func (val *BYTE) Unpack(data []byte) int {
+	return DefaultPack.UnpackByte((*byte)(val), data)
+}
+func (val *BYTE) Val() byte {
+	return byte(*val)
+}
+
+//----------------------
+type WORD uint16
+
+func (val *WORD) Pack(data []byte) int {
+	return DefaultPack.PackUint16(data, uint16(*val))
+}
+func (val *WORD) Unpack(data []byte) int {
+	return DefaultPack.UnpackUint16((*uint16)(val), data)
+}
+func (val *WORD) Val() uint16 {
+	return uint16(*val)
+}
+
+//----------------------
+type DWORD uint32
+
+func (val *DWORD) Pack(data []byte) int {
+	return DefaultPack.PackUint32(data, uint32(*val))
+}
+func (val *DWORD) Unpack(data []byte) int {
+	return DefaultPack.UnpackUint32((*uint32)(val), data)
+}
+func (val *DWORD) Val() uint32 {
+	return uint32(*val)
+}
+
+//----------------------
+type QWORD uint64
+
+func (val *QWORD) Pack(data []byte) int {
+	return DefaultPack.PackUint64(data, uint64(*val))
+}
+func (val *QWORD) Unpack(data []byte) int {
+	return DefaultPack.UnpackUint64((*uint64)(val), data)
+}
+func (val *QWORD) Val() uint64 {
+	return uint64(*val)
+}
+
+//----------------------
+type String string
+
+func (val *String) Pack(data []byte, size int) int {
+	return DefaultPack.PackString(data, string(*val), size)
+}
+func (val *String) Unpack(data []byte, size int) int {
+	return DefaultPack.UnpackString((*string)(val), data, size)
+}
+func (val *String) Val() string {
+	return string(*val)
+}
+func (val *String) Set(str string) {
+	*val = String(str)
 }
