@@ -81,7 +81,7 @@ func (p *PackTool) UnpackSlice(val *[]byte, data []byte, size int) int {
 	copy(*val, data[:size])
 	return size
 }
-func (p *PackTool) UnpackArray(val []byte, data []byte) int {
+func (p *PackTool) UnpackArrayByte(val []byte, data []byte) int {
 	copy(val, data)
 	return len(val)
 }
@@ -135,7 +135,7 @@ func (p *PackTool) PackSlice(data []byte, val []byte, size int) int {
 	}
 	return size
 }
-func (p *PackTool) PackArray(data []byte, val []byte) int {
+func (p *PackTool) PackArrayByte(data []byte, val []byte) int {
 	copy(data, val)
 	return len(val)
 }

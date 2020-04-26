@@ -52,7 +52,7 @@ func TestPackTool(t *testing.T) {
 			offset += p.PackString(data[offset:], "hello", 10)
 			offset += p.PackSlice(data[offset:], sampleBuf, len(sampleBuf))
 			offset += p.PackUint32(data[offset:], 999)
-			offset += p.PackArray(data[offset:], sampleArray[0:])
+			offset += p.PackArrayByte(data[offset:], sampleArray[0:])
 			offset += p.PackBool(data[offset:], true)
 			offset += p.PackBool(data[offset:], false)
 			offset += p.PackByte(data[offset:], 66)
@@ -82,7 +82,7 @@ func TestPackTool(t *testing.T) {
 			offset += p.UnpackUint32(&u32, data[offset:])
 			c.So(u32, c.ShouldEqual, 999)
 
-			offset += p.UnpackArray(array[0:], data[offset:])
+			offset += p.UnpackArrayByte(array[0:], data[offset:])
 			c.So(array, c.ShouldEqual, sampleArray)
 
 			offset += p.UnpackBool(&boo, data[offset:])
