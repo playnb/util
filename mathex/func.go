@@ -19,3 +19,10 @@ func MaxUint32(v ...uint32) uint32 {
 	}
 	return r
 }
+
+func AbsInt(v int) int {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
