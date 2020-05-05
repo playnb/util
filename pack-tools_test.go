@@ -1,24 +1,9 @@
 package util
 
 import (
-	"fmt"
 	c "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
-
-func ShouldSameSlice(actual interface{}, expected ...interface{}) string {
-	d1 := (actual).([]byte)
-	d2 := (expected[0]).([]byte)
-	if len(d1) != len(d2) {
-		return fmt.Sprintf("需要:%v 却得到:%v", actual, expected[0])
-	}
-	for i := 0; i < len(d1) && i < len(d2); i++ {
-		if d1[i] != d2[i] {
-			return fmt.Sprintf("需要:%v 却得到:%v", actual, expected[0])
-		}
-	}
-	return ""
-}
 
 func TestPackTool(t *testing.T) {
 	u8 := byte(0)
@@ -77,7 +62,7 @@ func TestPackTool(t *testing.T) {
 			c.So(str, c.ShouldEqual, "hello")
 
 			offset += p.UnpackSlice(&buf, data[offset:], len(sampleBuf))
-			c.So(buf, ShouldSameSlice, sampleBuf)
+			c.So(buf, ShouldSameByteSlice, sampleBuf)
 
 			offset += p.UnpackUint32(&u32, data[offset:])
 			c.So(u32, c.ShouldEqual, 999)
