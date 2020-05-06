@@ -44,6 +44,14 @@ func (p *PackTool) UnpackUint16(val *uint16, data []byte) int {
 	}
 	return 2
 }
+func (p *PackTool) UnpackInt16(val *int16, data []byte) int {
+	if p.IsBigEndian {
+		*val = int16(binary.BigEndian.Uint16(data))
+	} else {
+		*val = int16(binary.LittleEndian.Uint16(data))
+	}
+	return 2
+}
 func (p *PackTool) UnpackUint32(val *uint32, data []byte) int {
 	if p.IsBigEndian {
 		*val = binary.BigEndian.Uint32(data)
@@ -84,6 +92,40 @@ func (p *PackTool) UnpackSlice(val *[]byte, data []byte, size int) int {
 func (p *PackTool) UnpackArrayByte(val []byte, data []byte) int {
 	copy(val, data)
 	return len(val)
+}
+func (p *PackTool) UnpackSliceUint16(val *[]uint16, data []byte, size int) int {
+	if *val == nil {
+		*val = make([]uint16, size)
+	}
+	offset := 0
+	for i := 0; i < size; i++ {
+		p.UnpackUint16(&((*val)[i]), data[offset:])
+	}
+	return offset
+}
+func (p *PackTool) UnpackArrayUint16(val []uint16, data []byte) int {
+	offset := 0
+	for i := 0; i < len(val); i++ {
+		p.UnpackUint16(&(val[i]), data[offset:])
+	}
+	return offset
+}
+func (p *PackTool) UnpackSliceUint64(val *[]uint64, data []byte, size int) int {
+	if *val == nil {
+		*val = make([]uint64, size)
+	}
+	offset := 0
+	for i := 0; i < size; i++ {
+		p.UnpackUint64(&((*val)[i]), data[offset:])
+	}
+	return offset
+}
+func (p *PackTool) UnpackArrayUint64(val []uint64, data []byte) int {
+	offset := 0
+	for i := 0; i < len(val); i++ {
+		p.UnpackUint64(&(val[i]), data[offset:])
+	}
+	return offset
 }
 
 func (p *PackTool) PackByte(data []byte, val byte) int {
@@ -138,6 +180,34 @@ func (p *PackTool) PackSlice(data []byte, val []byte, size int) int {
 func (p *PackTool) PackArrayByte(data []byte, val []byte) int {
 	copy(data, val)
 	return len(val)
+}
+func (p *PackTool) PackSliceUint16(data []byte, val []uint16, size int) int {
+	offset := 0
+	for i := 0; i < size; i++ {
+		offset += p.PackUint16(data[offset:], val[i])
+	}
+	return offset
+}
+func (p *PackTool) PackArrayUint16(data []byte, val []uint16) int {
+	offset := 0
+	for _, v := range val {
+		offset += p.PackUint16(data[offset:], v)
+	}
+	return offset
+}
+func (p *PackTool) PackSliceUint64(data []byte, val []uint64, size int) int {
+	offset := 0
+	for i := 0; i < size; i++ {
+		offset += p.PackUint64(data[offset:], val[i])
+	}
+	return offset
+}
+func (p *PackTool) PackArrayUint64(data []byte, val []uint64) int {
+	offset := 0
+	for _, v := range val {
+		offset += p.PackUint64(data[offset:], v)
+	}
+	return offset
 }
 
 var DefaultPack = NewPackTool(false)

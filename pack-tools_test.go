@@ -81,3 +81,8 @@ func TestPackTool(t *testing.T) {
 		}
 	})
 }
+
+func TestPackTool2(t *testing.T) {
+	d := []byte{1, 2, 3, 4, 5, 6, 7, 8}
+	d2 := []uint16(d)
+}
