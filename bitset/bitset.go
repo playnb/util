@@ -9,6 +9,7 @@ import (
 type Bitset interface {
 	Set(index uint32)
 	Clear(index uint32)
+	ClearAll()
 	Test(index uint32) bool
 	Range() []uint32
 }
@@ -54,6 +55,12 @@ func (bs *bitset) Clear(index uint32) {
 		return
 	}
 	panic(fmt.Sprintf("out of range(%d of %d)", index, len(bs.data)*64))
+}
+
+func (bs *bitset) ClearAll() {
+	for i := 0; i < len(bs.data); i++ {
+		bs.data[i] = 0
+	}
 }
 
 func (bs *bitset) Test(index uint32) bool {

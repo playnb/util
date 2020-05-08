@@ -28,5 +28,8 @@ func TestBitset(t *testing.T) {
 
 		c.So(func() { b.Set(1024) }, c.ShouldPanic)
 		c.So(func() { b.Clear(1024) }, c.ShouldPanic)
+
+		b.ClearAll()
+		c.So(b.Test(64), c.ShouldBeFalse)
 	})
 }
