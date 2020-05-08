@@ -1,6 +1,9 @@
 package util
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 func Capitalize(str string) string {
 	if len(str) == 0 {
@@ -38,4 +41,24 @@ func StringReplaceAll(src string, idet ...string) string {
 		src = strings.ReplaceAll(src, idet[i], idet[i+1])
 	}
 	return src
+}
+
+func StringToInt32(str string) int32 {
+	n, _ := strconv.ParseInt(str, 10, 32)
+	return int32(n)
+}
+
+func StringToInt64(str string) int64 {
+	n, _ := strconv.ParseInt(str, 10, 64)
+	return n
+}
+
+func StringToUint32(str string) uint32 {
+	n, _ := strconv.ParseUint(str, 10, 32)
+	return uint32(n)
+}
+
+func StringToUint64(str string) uint64 {
+	n, _ := strconv.ParseUint(str, 10, 64)
+	return n
 }

@@ -60,6 +60,14 @@ func (p *PackTool) UnpackUint32(val *uint32, data []byte) int {
 	}
 	return 4
 }
+func (p *PackTool) UnpackInt32(val *int32, data []byte) int {
+	if p.IsBigEndian {
+		*val = int32(binary.BigEndian.Uint32(data))
+	} else {
+		*val = int32(binary.LittleEndian.Uint32(data))
+	}
+	return 4
+}
 func (p *PackTool) UnpackUint64(val *uint64, data []byte) int {
 	if p.IsBigEndian {
 		*val = binary.BigEndian.Uint64(data)
@@ -90,6 +98,9 @@ func (p *PackTool) UnpackSlice(val *[]byte, data []byte, size int) int {
 	return size
 }
 func (p *PackTool) UnpackArrayByte(val []byte, data []byte) int {
+	if len(val) == 0 {
+		val = make([]byte, len(data))
+	}
 	copy(val, data)
 	return len(val)
 }
@@ -140,6 +151,9 @@ func (p *PackTool) PackUint16(data []byte, val uint16) int {
 	}
 	return 2
 }
+func (p *PackTool) PackInt16(data []byte, val int16) int {
+	return p.PackUint16(data, uint16(val))
+}
 func (p *PackTool) PackUint32(data []byte, val uint32) int {
 	if p.IsBigEndian {
 		binary.BigEndian.PutUint32(data, val)
@@ -147,6 +161,9 @@ func (p *PackTool) PackUint32(data []byte, val uint32) int {
 		binary.LittleEndian.PutUint32(data, val)
 	}
 	return 4
+}
+func (p *PackTool) PackInt32(data []byte, val int32) int {
+	return p.PackUint32(data, uint32(val))
 }
 func (p *PackTool) PackUint64(data []byte, val uint64) int {
 	if p.IsBigEndian {

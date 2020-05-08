@@ -13,7 +13,7 @@ func TestPackTool(t *testing.T) {
 	u32 := uint32(0)
 	_ = u32
 	u64 := uint64(0)
-	_ = u64
+	i32 := int32(-32)
 	str := ""
 	_ = str
 	boo := false
@@ -41,7 +41,7 @@ func TestPackTool(t *testing.T) {
 			offset += p.PackBool(data[offset:], true)
 			offset += p.PackBool(data[offset:], false)
 			offset += p.PackByte(data[offset:], 66)
-
+			offset += p.PackInt32(data[offset:], -66)
 		}
 		{
 			//Unpack
@@ -78,11 +78,13 @@ func TestPackTool(t *testing.T) {
 
 			offset += p.UnpackByte(&u8, data[offset:])
 			c.So(u8, c.ShouldEqual, 66)
+
+			offset += p.UnpackInt32(&i32, data[offset:])
+			c.So(i32, c.ShouldEqual, -66)
 		}
 	})
 }
 
 func TestPackTool2(t *testing.T) {
-	d := []byte{1, 2, 3, 4, 5, 6, 7, 8}
-	d2 := []uint16(d)
+
 }
