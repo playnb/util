@@ -43,6 +43,11 @@ func StringReplaceAll(src string, idet ...string) string {
 	return src
 }
 
+func StringToInt(str string) int {
+	n, _ := strconv.ParseInt(str, 10, 64)
+	return int(n)
+}
+
 func StringToInt32(str string) int32 {
 	n, _ := strconv.ParseInt(str, 10, 32)
 	return int32(n)
