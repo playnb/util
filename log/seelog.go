@@ -26,6 +26,9 @@ func (s *see) Error(format string, a ...interface{}) {
 func (s *see) Fatal(format string, a ...interface{}) {
 	s.logger.Critical(fmt.Sprintf(format, a...))
 }
+func (s *see) Warn(format string, a ...interface{}) {
+	s.logger.Warn(fmt.Sprintf(format, a...))
+}
 func (s *see) Flush() {
 	s.logger.Flush()
 }

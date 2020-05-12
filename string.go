@@ -58,6 +58,11 @@ func StringToInt64(str string) int64 {
 	return n
 }
 
+func StringToUint16(str string) uint16 {
+	n, _ := strconv.ParseInt(str, 10, 16)
+	return uint16(n)
+}
+
 func StringToUint32(str string) uint32 {
 	n, _ := strconv.ParseUint(str, 10, 32)
 	return uint32(n)

@@ -6,6 +6,7 @@ type logger interface {
 	Trace(format string, a ...interface{})
 	Error(format string, a ...interface{})
 	Fatal(format string, a ...interface{})
+	Warn(format string, a ...interface{})
 	Flush()
 }
 
@@ -33,6 +34,10 @@ func Error(format string, a ...interface{}) {
 
 func Fatal(format string, a ...interface{}) {
 	_ins.Fatal(format, a...)
+}
+
+func Warn(format string, a ...interface{}) {
+	_ins.Warn(format, a...)
 }
 
 func Flush() {
