@@ -26,6 +26,9 @@ func New(size uint32) Bitset {
 }
 
 func (bs *bitset) Set(index uint32) {
+	if bs == nil {
+		return
+	}
 	mask := uint64(1) << (index % 64)
 	if index < uint32(len(bs.data)*64) {
 		for {
@@ -42,6 +45,9 @@ func (bs *bitset) Set(index uint32) {
 }
 
 func (bs *bitset) Clear(index uint32) {
+	if bs == nil {
+		return
+	}
 	mask := ^(uint64(1) << (index % 64))
 	if index < uint32(len(bs.data)*64) {
 		for {
@@ -58,12 +64,18 @@ func (bs *bitset) Clear(index uint32) {
 }
 
 func (bs *bitset) ClearAll() {
+	if bs == nil {
+		return
+	}
 	for i := 0; i < len(bs.data); i++ {
 		bs.data[i] = 0
 	}
 }
 
 func (bs *bitset) Test(index uint32) bool {
+	if bs == nil {
+		return false
+	}
 	if index < uint32(len(bs.data)*64) {
 		return bs.data[index/64]&(uint64(1)<<(index%64)) != 0
 	}
@@ -71,6 +83,9 @@ func (bs *bitset) Test(index uint32) bool {
 }
 
 func (bs *bitset) Range() []uint32 {
+	if bs == nil {
+		return nil
+	}
 	var ret []uint32
 	for i := 0; i < len(bs.data)*64; i++ {
 		if bs.Test(uint32(i)) {

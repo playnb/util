@@ -2,12 +2,12 @@ package util
 
 import "time"
 
-var DelayTime = int64(0)
+var DelaySeconds = int64(0)
 
 func NowTimestamp() int64 {
-	return time.Now().Unix() + DelayTime
+	return time.Now().Unix() + DelaySeconds
 }
 
-func NowTimestampMillsecond() int64 {
-	return time.Now().UnixNano()/int64(time.Millisecond) + DelayTime*1000
+func NowTimestampMillisecond() int64 {
+	return time.Now().UnixNano()/int64(time.Millisecond) + DelaySeconds*1000
 }
