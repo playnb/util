@@ -76,6 +76,14 @@ func (p *PackTool) UnpackUint64(val *uint64, data []byte) int {
 	}
 	return 8
 }
+func (p *PackTool) UnpackInt64(val *int64, data []byte) int {
+	if p.IsBigEndian {
+		*val = int64(binary.BigEndian.Uint64(data))
+	} else {
+		*val = int64(binary.LittleEndian.Uint64(data))
+	}
+	return 8
+}
 func (p *PackTool) UnpackBool(val *bool, data []byte) int {
 	*val = data[0] != 0
 	return 1
@@ -170,6 +178,14 @@ func (p *PackTool) PackUint64(data []byte, val uint64) int {
 		binary.BigEndian.PutUint64(data, val)
 	} else {
 		binary.LittleEndian.PutUint64(data, val)
+	}
+	return 8
+}
+func (p *PackTool) PackInt64(data []byte, val int64) int {
+	if p.IsBigEndian {
+		binary.BigEndian.PutUint64(data, uint64(val))
+	} else {
+		binary.LittleEndian.PutUint64(data, uint64(val))
 	}
 	return 8
 }
