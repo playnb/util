@@ -118,14 +118,14 @@ func (p *PackTool) UnpackSliceUint16(val *[]uint16, data []byte, size int) int {
 	}
 	offset := 0
 	for i := 0; i < size; i++ {
-		p.UnpackUint16(&((*val)[i]), data[offset:])
+		offset += p.UnpackUint16(&((*val)[i]), data[offset:])
 	}
 	return offset
 }
 func (p *PackTool) UnpackArrayUint16(val []uint16, data []byte) int {
 	offset := 0
 	for i := 0; i < len(val); i++ {
-		p.UnpackUint16(&(val[i]), data[offset:])
+		offset += p.UnpackUint16(&(val[i]), data[offset:])
 	}
 	return offset
 }
@@ -135,14 +135,14 @@ func (p *PackTool) UnpackSliceUint64(val *[]uint64, data []byte, size int) int {
 	}
 	offset := 0
 	for i := 0; i < size; i++ {
-		p.UnpackUint64(&((*val)[i]), data[offset:])
+		offset += p.UnpackUint64(&((*val)[i]), data[offset:])
 	}
 	return offset
 }
 func (p *PackTool) UnpackArrayUint64(val []uint64, data []byte) int {
 	offset := 0
 	for i := 0; i < len(val); i++ {
-		p.UnpackUint64(&(val[i]), data[offset:])
+		offset += p.UnpackUint64(&(val[i]), data[offset:])
 	}
 	return offset
 }
