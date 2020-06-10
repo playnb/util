@@ -15,7 +15,7 @@ func GetIp(ifName string) string {
 	for _, i := range interfaces {
 		byName, err := net.InterfaceByName(i.Name)
 		if err != nil {
-			log.Trace("[Util] GetIp(%s) Error:%s", ifName, err.Error())
+			log.Trace("[Util] GetIp(%s) Error:%s", i.Name, err.Error())
 			continue
 		}
 		addresses, err := byName.Addrs()
@@ -31,4 +31,26 @@ func GetIp(ifName string) string {
 		}
 	}
 	return defaultIp
+}
+
+func ShowAllIp() {
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return
+	}
+
+	for _, i := range interfaces {
+		byName, err := net.InterfaceByName(i.Name)
+		if err != nil {
+			continue
+		}
+		addresses, err := byName.Addrs()
+		for _, v := range addresses {
+			if ipNet, ok := v.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+				if ipNet.IP.To4() != nil {
+					log.Trace("[Util] ShowAllIp (%s)(%s)", byName.Name, ipNet.IP.To4().String())
+				}
+			}
+		}
+	}
 }

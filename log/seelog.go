@@ -34,6 +34,11 @@ func (s *see) Flush() {
 }
 
 func DefaultLogger(logDir string, logName string) logger {
+	if len(logDir) == 0 && len(logName) == 0 {
+		sl := &see{}
+		sl.logger = seelog.Default
+		return sl
+	}
 	os.MkdirAll(logDir, os.ModePerm)
 
 	sl := &see{}
