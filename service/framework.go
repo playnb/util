@@ -36,8 +36,8 @@ func (f *Framework) Run(ins Service, ctx context.Context, cfg config.Config) {
 	}()
 }
 
-func (f *Framework) Done() <-chan struct{} {
-	return f.ctx.Done()
+func (f *Framework) Context() context.Context {
+	return f.ctx
 }
 
 func (f *Framework) Config() config.Config {

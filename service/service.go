@@ -11,6 +11,7 @@ type Service interface {
 	OnTerminate()
 	String() string
 	Name() string
+	GetFramework() *Framework
 }
 
 func RunService(s Service, ctx context.Context, cfg config.Config) *Framework {

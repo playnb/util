@@ -48,7 +48,7 @@ func ShowAllIp() {
 		for _, v := range addresses {
 			if ipNet, ok := v.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
 				if ipNet.IP.To4() != nil {
-					log.Trace("[Util] ShowAllIp (%s)(%s)", byName.Name, ipNet.IP.To4().String())
+					log.Trace("[Util] ShowAllIp (%s)  (%s)", byName.Name, ipNet.IP.To4().String())
 				}
 			}
 		}
