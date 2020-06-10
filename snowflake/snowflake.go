@@ -29,7 +29,12 @@ func New(nodeId uint64) (*SnowFlake, error) {
 	if nodeId > MaxNodeId {
 		return nil, errors.New("invalid node Id")
 	}
-	return &SnowFlake{nodeId: nodeId}, nil
+	sf := &SnowFlake{nodeId: nodeId}
+	err := sf.newEpoch()
+	if err != nil {
+		return nil, err
+	}
+	return sf, nil
 }
 
 type SnowFlake struct {
@@ -39,12 +44,13 @@ type SnowFlake struct {
 	lock      sync.Mutex
 }
 
-func (sf *SnowFlake) waitNextMilli(ts uint64) uint64 {
-	for ts == sf.timestamp {
-		time.Sleep(10 * time.Microsecond)
-		ts = uint64(util.NowTimestampMillisecond() - epoch)
+func (sf *SnowFlake) newEpoch() error {
+	sf.timestamp = uint64(util.NowTimestampMillisecond() - epoch*1000)
+	if sf.timestamp >= MaxTimestamp {
+		return errors.New("timestamp overflow")
 	}
-	return ts
+	sf.sequence = 0
+	return nil
 }
 
 func (sf *SnowFlake) Next() (uint64, error) {
@@ -54,11 +60,10 @@ func (sf *SnowFlake) Next() (uint64, error) {
 	sf.sequence++
 	if sf.sequence >= MaxSequence {
 		time.Sleep(5 * time.Microsecond)
-		sf.timestamp = uint64(util.NowTimestampMillisecond() - epoch*1000)
-		if sf.timestamp >= MaxTimestamp {
-			return 0, errors.New("timestamp overflow")
+		err := sf.newEpoch()
+		if err != nil {
+			return 0, err
 		}
-		sf.sequence = 0
 	}
 
 	return (sf.timestamp << (BitesSequence + BitesNodeID)) | (uint64(sf.nodeId) << BitesSequence) | (uint64(sf.sequence)), nil
