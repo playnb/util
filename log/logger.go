@@ -1,5 +1,9 @@
 package log
 
+func init() {
+	Init(DefaultLogger("", ""))
+}
+
 type logger interface {
 	Debug(format string, a ...interface{})
 	Info(format string, a ...interface{})
