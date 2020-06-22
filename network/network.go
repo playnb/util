@@ -36,6 +36,7 @@ func nextSequenceID() uint64 {
 type Conn interface {
 	UniqueId() uint64
 	Read() ([]byte, error)
+	ReadChan() chan []byte
 	Write(b []byte) (int, error)
 	Close() error
 }

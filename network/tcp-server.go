@@ -10,6 +10,7 @@ import (
 var DefaultTcpConnOptions = &TcpConnOptions{
 	PendingNum:       1024,
 	MaxConnectionNum: 0,
+	LittleEndian:     true,
 }
 
 func NewTcpServer(name string, opts *TcpConnOptions) *TcpServer {

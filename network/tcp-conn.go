@@ -66,6 +66,7 @@ func (ti *tcpConnImpl) Write(b []byte) (n int, err error) {
 type TcpConnOptions struct {
 	PendingNum       int
 	MaxConnectionNum int
+	LittleEndian     bool
 }
 
 func newTCPConn(opts *TcpConnOptions, onClose func(Conn)) *TcpConn {
@@ -95,7 +96,7 @@ func (tcp *TcpConn) init(opts *TcpConnOptions) {
 	tcp.logName = "[TcpConn]"
 
 	tcp.tcpImpl = &tcpConnImpl{}
-	tcp.tcpImpl.SetFilter(&StreamFilterTcpPack{LittleEndian: false})
+	tcp.tcpImpl.SetFilter(&StreamFilterTcpPack{LittleEndian: opts.LittleEndian})
 
 	tcp.impl = &connImpl{}
 	tcp.impl.Init(tcp.tcpImpl, tcp.ctx, 1024)
@@ -146,6 +147,10 @@ func (tcp *TcpConn) Read() ([]byte, error) {
 	} else {
 		return nil, ErrReadCloseConn
 	}
+}
+
+func (tcp *TcpConn) ReadChan() chan []byte {
+	return tcp.impl.readChan
 }
 
 func (tcp *TcpConn) Write(b []byte) (int, error) {
