@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	c "github.com/smartystreets/goconvey/convey"
+	"reflect"
 	"testing"
 )
 
@@ -10,6 +11,9 @@ type _mockData struct {
 	id   int
 	name string
 }
+
+func (m *_mockData) f1() { fmt.Println(m.name) }
+func (m *_mockData) f2() { fmt.Println(m.id) }
 
 func buildSlice() []*_mockData {
 	var v []*_mockData
@@ -63,5 +67,31 @@ func TestSubSlice(t *testing.T) {
 		c.So(SubSlice(s1, 3, 8).([]int), ShouldSameIntSlice, []int{3, 4, 5})
 		c.So(SubSlice(s1, 3, 1).([]int), ShouldSameIntSlice, SubSlice(s1, 1, 3).([]int))
 		c.So(SubSlice(s1, 5, 5).([]int), ShouldSameIntSlice, []int{})
+	})
+}
+
+func TestFuncSlice(t *testing.T) {
+	f1 := func() {
+		fmt.Println(t.Name())
+	}
+	f2 := func() {
+		fmt.Println("f2")
+	}
+
+	m1 := &_mockData{}
+	m2 := &_mockData{}
+
+	s1 := []func(){f1, f2, m1.f1, m1.f2, m2.f1, m2.f2}
+	fmt.Println(s1)
+	c.Convey("TestFuncSlice", t, func() {
+		DelSlice(&s1, func(d interface{}) bool {
+			p1 := reflect.ValueOf(d).Type()     //reflect.ValueOf(d).Pointer()
+			p2 := reflect.ValueOf(m1.f1).Type() //reflect.ValueOf(m1.f1).Pointer()
+
+			reflect.ValueOf(d).Call(nil)
+			reflect.ValueOf(m1.f1).Call(nil)
+			return p1 == p2
+		})
+		fmt.Println(s1)
 	})
 }

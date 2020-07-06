@@ -66,5 +66,10 @@ func (m *StateMachine) findTransMatching(fromState string, event string) *Transi
 			return &v
 		}
 	}
+	for _, v := range m.transitions {
+		if v.From == StateAny && v.Event == event {
+			return &v
+		}
+	}
 	return nil
 }
